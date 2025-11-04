@@ -4,32 +4,105 @@
     {
         static void Main(string[] args)
         {
-            List<int> nums = Console.ReadLine().Split().Select(int.Parse).ToList();
+            // 1. Въвеждане на началния списък от числа
+            List<int> nums = Console.ReadLine()
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(int.Parse)
+                .ToList();
+
+            // 2. Четене и изпълнение на команди, докато не се въведе "finish"
             while (true)
             {
-                string[] cmd = Console.ReadLine().Split().ToArray();
-                string command = cmd[0];
-                if (command.ToLower() == "finish")
-                {
+                string input = Console.ReadLine().Trim();
+                if (input.Equals("finish", StringComparison.OrdinalIgnoreCase))
                     break;
-                }
+
+                string[] parts = input.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                string command = parts[0].ToLower();
+
                 switch (command)
                 {
-                    case "ins": int index= int.Parse(cmd[1]);
-                        int num = int.Parse(cmd[2]);
-                        nums.Insert(index,num);
-                        break;
                     case "print":
                         Console.WriteLine(string.Join(" ", nums));
                         break;
+
+                    case "ins":
+                        {
+                            int index = int.Parse(parts[1]);
+                            int element = int.Parse(parts[2]);
+                            if (index >= 0 && index <= nums.Count)
+                                nums.Insert(index, element);
+                            else
+                                Console.WriteLine("Invalid index");
+                            break;
+                        }
+
+                    case "del":
+                        {
+                            int element = int.Parse(parts[1]);
+                            if (nums.Contains(element))
+                                nums.Remove(element);
+                            else
+                                Console.WriteLine("Element not found");
+                            break;
+                        }
+
                     case "contains":
-                        
-                        //TODO
-                        break;
+                        {
+                            int element = int.Parse(parts[1]);
+                            Console.WriteLine(nums.Contains(element) ? "Yes" : "No");
+                            break;
+                        }
 
+                    case "remove":
+                        {
+                            int index = int.Parse(parts[1]);
+                            if (index >= 0 && index < nums.Count)
+                                nums.RemoveAt(index);
+                            else
+                                Console.WriteLine("Invalid index");
+                            break;
+                        }
 
-                    //TO DO
+                    case "add":
+                        {
+                            int num1 = int.Parse(parts[1]);
+                            int num2 = int.Parse(parts[2]);
+                            nums.Add(num1 + num2);
+                            break;
+                        }
+
+                    case "countl":
+                        {
+                            int number = int.Parse(parts[1]);
+                            int count = nums.Count(x => x > number);
+                            Console.WriteLine($"CountL={count}");
+                            break;
+                        }
+
+                    case "countodds":
+                        {
+                            int count = nums.Count(x => x % 2 != 0);
+                            Console.WriteLine($"CountOdds={count}");
+                            break;
+                        }
+
+                    case "countevens":
+                        {
+                            int count = nums.Count(x => x % 2 == 0);
+                            Console.WriteLine($"CountEvens={count}");
+                            break;
+                        }
+
+                    case "sumall":
+                        {
+                            int sum = nums.Sum();
+                            Console.WriteLine($"Sum={sum}");
+                            break;
+                        }
+
                     default:
+                        Console.WriteLine("Unknown command");
                         break;
                 }
             }
